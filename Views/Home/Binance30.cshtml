@@ -1,0 +1,103 @@
+﻿@model IEnumerable<Arbitrage01.Models.RatioModel>
+
+@{
+    ViewData["Title"] = "Binance30";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<head>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+</head>
+
+<h2>Binance Borsası</h2>
+<p class="text-muted"><i>Sonuç Değerine Göre İlk 30 ve Son 30</i></p>
+<div id="tablediv">
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    <a href="~/Home/Binance">İşlem Hacmine Göre Göster</a>
+                </th>
+                <th>
+                    @Html.DisplayName("(XXX/BTC) / (ETH/BTC)")
+                </th>
+                <th>
+                    @Html.DisplayName("(XXX/ETH)")
+                </th>
+                <th>
+                    @Html.DisplayName("(XXX/BNB) × (BNB/ETH)")
+                </th>
+                <th>
+                    @Html.DisplayName("(XXX/USDT) / (ETH/USDT)")
+                </th>
+                <th>
+                    @Html.DisplayName("Fark")
+                </th>
+                <th>
+                    @Html.DisplayName("Sonuç Değeri")
+                </th>
+                <th>
+                    @Html.DisplayName("BTC Piyasası İşlem Hacmi")
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        <b>@Html.DisplayName(item.Symbol.Substring(0, item.Symbol.Length - 3))</b>
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Value1)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.XxxEth)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Value3)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Value4)
+                    </td>
+                    <td>
+                        @if (Convert.ToDecimal(item.Difference, System.Globalization.CultureInfo.InvariantCulture) < 0)
+                        {
+                            <p class="alert-danger">@Html.DisplayFor(modelItem => item.Difference)</p>
+                        }
+                        else
+                        {
+                            <p class="alert-success">@Html.DisplayFor(modelItem => item.Difference)</p>
+                        }
+                    </td>
+                    <td>
+                        @if (Convert.ToDecimal(item.Difference, System.Globalization.CultureInfo.InvariantCulture) < 0)
+                        {
+                            <p class="alert-danger">@Html.DisplayFor(modelItem => item.ResultValue)</p>
+                        }
+                        else
+                        {
+                            <p class="alert-success">@Html.DisplayFor(modelItem => item.ResultValue)</p>
+                        }
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.QuoteVolume)
+                    </td>
+                    <td>
+                        @*@Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
+                            @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
+                            @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })*@
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+<script type="text/javascript">
+    setInterval(function () {
+        $("#tablediv").load(" #tablediv");
+    }, 5000);
+</script>
